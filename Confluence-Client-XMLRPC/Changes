@@ -1,0 +1,4 @@
+
+{{$NEXT}}
+	- Took Confluence.pm from https://confluence.atlassian.com/display/DISC/Perl+XML-RPC+client;
+		renamed it, added some POD and reformatted the source; no functional changes
