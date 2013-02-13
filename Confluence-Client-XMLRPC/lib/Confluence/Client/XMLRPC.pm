@@ -1,3 +1,4 @@
+
 package Confluence::Client::XMLRPC;
 use strict;
 use warnings;
@@ -6,22 +7,22 @@ use warnings;
 
 # Copyright (c) 2004 Asgeir.Nilsen@telenor.com
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#    Version 2.1.1 changes by Torben K. Jensen
-#    + Support for automatic reconnect upon session expiration.
+# Version 2.1.1 changes by Torben K. Jensen
+# + Support for automatic reconnect upon session expiration.
 
 use RPC::XML;
 use RPC::XML::Client;
@@ -227,8 +228,14 @@ B<ATTENTION>, please: This module was written by Asgeir Nilsen in 2004 and later
 improved by Giles Lewis, Martin Ellis, and Torben K. Jensen.
 
 I - Heiko Jansen - only took the available source code and created a CPAN distribution
-for it, because at least to me a Perl module almost does not exist if it´s not on 
+for it, because at least to me a Perl module almost does not exist if it's not on 
 available via CPAN.
+
+This package B<should> work with any remote API function.
+
+The original authors tested it with C<addUserToGroup>, C<getActiveUsers>, C<getPage>, C<getPages>, C<getServerInfo>,
+C<getUser>, and C<storePage>. I (Heiko Jansen) have used it successfully to create and update pages, but I did
+B<not> test most other API functions and am thus B<unable to give any guarantee that it will work as expected>!
 
 The original module was simply named "Confluence" but since Atlassian is currently
 working on a new REST-based API and since there already is L<Jira::Client> and
@@ -239,15 +246,8 @@ L<Jira::Client::REST> on CPAN I renamed it to C<Confluence::Client::XMLRPC>.
   my $object = Confluence::Client::XMLRPC->new( <URL>, <user>, <pass> );
   my $result = $object->method(argument,..);
 
-=head1 Data types
 
-Perl simple data types are mapped to string.
-Hash references are mapped to struct.
-Array references are mapped to array.
-
-This package now automatically converts all scalars to RPC::XML::string, so explicit type conversions should not be required.
-
-=head1 Error handling
+=head1 ERROR HANDLING
 
 This package has two global flags which control error handings.
 
@@ -270,7 +270,17 @@ If RaiseError is set to 0 then C<Confluence::Client::XMLRPC::lastError()> can be
     say $e;
   }
 
-=head1 Extension functions
+=head1 USAGE
+
+=head2 Data types
+
+Perl simple data types are mapped to string.
+Hash references are mapped to struct.
+Array references are mapped to array.
+
+This package now automatically converts all scalars to RPC::XML::string, so explicit type conversions should not be required.
+
+=head1 API extension
 
 =over 4
 
@@ -285,7 +295,7 @@ it exists. See example below.
 
 =back
 
-=head1 Examples
+=head1 EXAMPLES
 
 =over 4
 
@@ -310,15 +320,9 @@ This script requires three arguments: API url, name and password of an admin use
 
 Please refer to the C<examples> directory of the distribution for the scripts themselves.
 
-=head1 More information
+=head1 SEE ALSO
 
 The package uses the L<RPC::XML> module to do the heavy lifting. Read the perldoc for this package to learn more.
-
-This package B<should> work with any remote API function.
-
-The original authors tested it with C<addUserToGroup>, C<getActiveUsers>, C<getPage>, C<getPages>, C<getServerInfo>,
-C<getUser>, and C<storePage>. I (Heiko Jansen) have used it successfully to create and update pages, but I did
-B<not> test most other API functions and am thus B<unable to give any guarantee that it will work as expected>!
 
 For further information on the Confluence API itself please refer to the 
 L<official documentation|https://confluence.atlassian.com/display/DOC/Confluence+Documentation+Home> as provided
