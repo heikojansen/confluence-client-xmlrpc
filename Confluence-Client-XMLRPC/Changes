@@ -1,4 +1,6 @@
 
 {{$NEXT}}
+
+2.2       2013-02-13 22:29:06 Europe/Berlin
 	- Took Confluence.pm from https://confluence.atlassian.com/display/DISC/Perl+XML-RPC+client;
 		renamed it, added some POD and reformatted the source; no functional changes
