@@ -1,6 +1,9 @@
 
 {{$NEXT}}
 
+2.3       2014-01-12 20:04:16 Europe/Berlin
+	- Provide ways to set the version of the Confluence API to use 
+
 2.2       2013-02-13 22:29:06 Europe/Berlin
 	- Took Confluence.pm from https://confluence.atlassian.com/display/DISC/Perl+XML-RPC+client;
 		renamed it, added some POD and reformatted the source; no functional changes
