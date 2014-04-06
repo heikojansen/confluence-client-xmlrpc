@@ -96,8 +96,12 @@ sub argcopy {
 	return $arg if $depth > 1;
 	my $typ = ref $arg;
 	if ( !$typ ) {
-		if   ( $arg =~ /true|false/ and $depth == 0 ) { return new RPC::XML::boolean($arg); }
-		else                                          { return new RPC::XML::string($arg); }
+		if ( ( $arg eq 'true' or $arg eq 'false' ) and $depth == 0 ) {
+			return new RPC::XML::boolean($arg);
+		}
+		else {
+			return new RPC::XML::string($arg);
+		}
 	}
 	if ( $typ eq "HASH" ) {
 		my %hash;
