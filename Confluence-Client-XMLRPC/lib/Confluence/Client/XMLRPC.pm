@@ -32,7 +32,7 @@ use vars '$AUTOLOAD';    # keep 'use strict' happy
 
 our $AUTO_SESSION_RENEWAL = 1;
 
-use fields qw(url user pass token client);
+use fields qw(url user pass token client cflVersion);
 
 # Global variables
 our $API        = 'confluence1';
@@ -143,9 +143,13 @@ sub new {
 	if ($LastError) {
 		croak $LastError if $RaiseError;
 		warn $LastError  if $PrintError;
+		$self->{token} = '';
+		return '';
 	}
-	$self->{token} = $LastError ? '' : $result;
-	return $LastError ? '' : $self;
+	else {
+		$self->{token} = $result;
+		return $self;
+	}
 } ## end sub new
 
 # login is an alias for new
@@ -155,6 +159,39 @@ sub login {
 
 sub updatePage {
 	my Confluence::Client::XMLRPC $self = shift;
+	my $page = shift;
+	my $pageUpdateOptions = ( shift // {} );
+
+	my $cflVersion = '';
+	if ( exists $self->{'cflVersion'} ) {
+		$cflVersion = $self->{'cflVersion'};
+	}
+	else {
+		_debugPrint( "Checking Confluence server version" ) if $CONFLDEBUG;
+		my $serverInfo = _rpc( $self, 'getServerInfo' );
+
+		if ( !defined($serverInfo) or ref($serverInfo) ne ref({}) ) {
+			croak "Unable to determine Confluence version: aborting updatePage()" if $RaiseError;
+			warn  "Unable to determine Confluence version: aborting updatePage()" if $PrintError;
+			return '';
+		}
+		$cflVersion = sprintf( "%03s%03s%03s", @{ $serverInfo }{ 'majorVersion', 'minorVersion', 'patchLevel' } );
+		$self->{'cflVersion'} = $cflVersion;
+	}
+
+	if ( $cflVersion gt "002010000" ) {
+		_debugPrint("Using API method updatePage() for Confluence >= 2.10") if $CONFLDEBUG;
+		return _rpc( $self, 'updatePage', $page, $pageUpdateOptions );
+	}
+	else {
+		_debugPrint("Emulating non-existant API method updatePage() for Confluence < 2.10") if $CONFLDEBUG;
+		return _updatePage( $self, $page );
+	}
+}
+
+sub _updatePage {
+	my Confluence::Client::XMLRPC $self = shift;
+
 	my ($newPage)                       = @_;
 	my $saveRaise                       = setRaiseError(0);
 	my $result                          = $self->storePage($newPage);
