@@ -283,7 +283,6 @@ sub AUTOLOAD {
 
 __END__
 
-
 =pod
 
 =encoding utf8
@@ -300,8 +299,63 @@ __END__
 
 =head1 METHODS
 
-All method calls are simply mapped (via C<AUTOLOAD>) to RPC method calls.
-Please refer to 
+=over 4
+
+=item new ( URL, USER, PASS [, API_VERSION ] )
+
+Creates a new instance object and establishes a session with the server.
+Returns an empty value on failure or C<croak>s if setRaiseError is true.
+
+Starting with v2.3 you may pass in the API version to use.
+
+Starting with v2.5 the newest API version available for the Confluence 
+server used will automatically be chosen unless the API version is 
+explicitly passed in. Unlike before - when the module defaulted to using
+the version 1 API regardless of the Confluence server used - now version
+2 will be selected for Confluence >= 4.0.0.
+
+=item login ( URL, USER, PASS [, API_VERSION ] )
+
+Alias for C<new>.
+
+=item updatePage ( PAGE [, PAGEUPDATEOPTIONS] )
+
+B<============================================================================>
+
+B<TODO>: bring the behavior of the two approaches more in line with each other.
+Might need extra work other than simply dispatching to the newer API!
+
+B<============================================================================>
+
+Dispatches to either the RPC API method that was introduced in Confluence
+2.10 or uses a combination of C<getPage>, C<storePage> to achieve a similar
+effect with older Confluence versions.
+
+The behaviour of the shim was this:
+
+This package has a function called C<updatePage> which is not part of the 
+original remote API. If the page id is not specified then the function will 
+call C<storePage> to do an insert. 
+If an "already exists" error is encountered then the function will call 
+C<getPage> to retrieve the page id and version, and then repeat the 
+C<storePage> attempt. This function is intended to be used in situations 
+where the intent is to upload pages, overwriting existing content if it 
+exists.
+
+=item setApiVersion( VERSION )
+
+Sets the API version to use. See section B<API VERSIONS> below for more
+information on the different API versions and the consequences of using
+one or the other.
+
+=item setRaiseError( BOOL ), setPrintError( BOOL )
+
+See section B<ERROR HANDLING> below.
+
+=back
+
+All other method calls are simply mapped (via C<AUTOLOAD>) to RPC method 
+calls. Please refer to 
 L<the official list of available methods|https://developer.atlassian.com/display/CONFDEV/Remote+Confluence+Methods>
 for further information.
 
@@ -392,23 +446,6 @@ To aid in the migration phase Confluence 4.0 and up provide a method
 C<convertWikiToStorageFormat()> where you can pass in a string with 
 wiki markup and will recieve the same data converted to the new storage 
 format (which you can then use to create or update a page).
-
-=head1 API extension
-
-=over 4
-
-=item updatePage
-
-This package has a function called C<updatePage> which is not part of the 
-original remote API. If the page id is not specified then the function will 
-call C<storePage> to do an insert. 
-If an "already exists" error is encountered then the function will call 
-C<getPage> to retrieve the page id and version, and then repeat the 
-C<storePage> attempt. This function is intended to be used in situations 
-where the intent is to upload pages, overwriting existing content if it 
-exists. See example below.
-
-=back
 
 =head1 EXAMPLES
 

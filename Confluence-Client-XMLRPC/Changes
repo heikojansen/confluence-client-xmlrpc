@@ -6,6 +6,7 @@
 	  back to shim otherwise
 	- Bugfix: Do not create Boolean RPC arguments based on substring matches,
 	  compare complete strings instead (reported by russt [at] releasetools.org)
+	- More documentation improvements
 
 2.4       2014-04-06 00:49:34 Europe/Berlin
 	- Significantly reworked the documentation
