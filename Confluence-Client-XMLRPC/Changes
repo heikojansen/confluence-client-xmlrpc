@@ -1,12 +1,17 @@
 
 {{$NEXT}}
+	- INCOMPATIBLE CHANGE: make updatePage() behave like the API method of 
+	  that name does
+	- New method updateOrStorePage() that behaves like updatePage() did
 	- Automatically choose the newest available API depending on the Confluence
 	  version (unless a specific version is explicitly requested)
 	- Use updatePage() API method if available (>= Confluence 2.10) and fall
 	  back to shim otherwise
+	- New shim for getPageSummary() for older Confluence versions
 	- Bugfix: Do not create Boolean RPC arguments based on substring matches,
 	  compare complete strings instead (reported by russt [at] releasetools.org)
-	- More documentation improvements
+	- Many documentation improvements
+	- "local"ize Data::Dumper global configuration variables
 
 2.4       2014-04-06 00:49:34 Europe/Berlin
 	- Significantly reworked the documentation
