@@ -163,6 +163,7 @@ sub new {
 		$self->{token} = '';
 		return '';
 	}
+	$self->{'_serverInfo'} = $serverInfo;
 	$self->{'_cflVersion'} = sprintf( "%03s%03s%03s", @{ $serverInfo }{ 'majorVersion', 'minorVersion', 'patchLevel' } );
 
 	# set default API version based on Confluence version (unless explicitly given)
@@ -180,6 +181,15 @@ sub new {
 # login is an alias for new
 sub login {
 	return new @_;
+}
+
+sub getServerInfo {
+	my Confluence::Client::XMLRPC $self = shift;
+	if ($CONFLDEBUG) {
+		_debugPrint("Retrieving serverInfo from local cache");
+		_debugPrint( "Result=", $self->{'_serverInfo'} );
+	}
+	return $self->{'_serverInfo'};
 }
 
 sub getPageSummary {
