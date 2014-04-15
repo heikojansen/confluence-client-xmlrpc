@@ -305,14 +305,18 @@ sub _rpc {
 		:                            "XML-RPC ERROR: Unable to connect to " . $self->{url};
 
 	_debugPrint( "Result=", $result ) if $CONFLDEBUG;
-	if ( ( $LastError =~ /InvalidSessionException/i ) && $AUTO_SESSION_RENEWAL )
-	{    # Session time-out; log back in.
+
+	if ( ( $LastError =~ /InvalidSessionException/i ) && $AUTO_SESSION_RENEWAL ) {
+
+		# Session time-out; log back in.
 		warn "SESSION EXPIRED: Reconnecting...\n" if $PrintError;
-		my $pass = $self->{pass};
+		my ( $url, $user, $pass ) = ( $self->{url}, $self->{user}, $self->{pass} );
 		$self->{pass} = '';    # Prevent repeated attempts.
-		my $clone = Confluence::Client::XMLRPC->new( $self->{url}, $self->{user}, $pass );
-		if ($clone) {
-			$self->{token} = $clone->{token};
+		if ( my $clone = Confluence::Client::XMLRPC->new( $url, $user, $pass, $API ) ) {
+			$self->{token}         = $clone->{token};
+			$self->{'_cflVersion'} = $clone->{'_cflVersion'};
+			$self->{'_serverInfo'} = $clone->{'_serverInfo'};
+
 			$result = _rpc( $self, $method, @_ );
 			$self->{pass} = $pass;
 		}
