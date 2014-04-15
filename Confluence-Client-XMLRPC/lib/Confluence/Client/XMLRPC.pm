@@ -32,7 +32,7 @@ use vars '$AUTOLOAD';    # keep 'use strict' happy
 
 our $AUTO_SESSION_RENEWAL = 1;
 
-use fields qw(url user pass token client _cflVersion);
+use fields qw(url user pass token client _cflVersion _serverInfo);
 
 # Global variables
 our $API        = 'confluence1';
