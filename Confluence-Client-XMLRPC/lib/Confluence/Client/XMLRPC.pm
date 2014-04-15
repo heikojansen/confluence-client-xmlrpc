@@ -32,7 +32,7 @@ use vars '$AUTOLOAD';    # keep 'use strict' happy
 
 our $AUTO_SESSION_RENEWAL = 1;
 
-use fields qw(url user pass token client cflVersion);
+use fields qw(url user pass token client _cflVersion);
 
 # Global variables
 our $API        = 'confluence1';
@@ -163,11 +163,11 @@ sub new {
 		$self->{token} = '';
 		return '';
 	}
-	$self->{'cflVersion'} = sprintf( "%03s%03s%03s", @{ $serverInfo }{ 'majorVersion', 'minorVersion', 'patchLevel' } );
+	$self->{'_cflVersion'} = sprintf( "%03s%03s%03s", @{ $serverInfo }{ 'majorVersion', 'minorVersion', 'patchLevel' } );
 
 	# set default API version based on Confluence version (unless explicitly given)
 	unless ( defined($version) and $version =~ /\A(?:confluence)?([1-9])\Z/i ) {
-		if ( $self->{'cflVersion'} ge '004000000' ) {
+		if ( $self->{'_cflVersion'} ge '004000000' ) {
 			$API = 'confluence2';
 		}
 		else {
@@ -185,7 +185,7 @@ sub login {
 sub getPageSummary {
 	my Confluence::Client::XMLRPC $self = shift;
 
-	if ( $self->{'cflVersion'} ge "004000000" ) {
+	if ( $self->{'_cflVersion'} ge "004000000" ) {
 		return _rpc( $self, 'getPageSummary', @_ );
 	}
 	else {
@@ -205,7 +205,7 @@ sub updatePage {
 	my $page                            = shift;
 	my $pageUpdateOptions               = ( shift || {} );
 
-	if ( $self->{'cflVersion'} ge "002010000" ) {
+	if ( $self->{'_cflVersion'} ge "002010000" ) {
 		_debugPrint("Using API method updatePage() for Confluence >= 2.10") if $CONFLDEBUG;
 		return _rpc( $self, 'updatePage', $page, $pageUpdateOptions );
 	}
