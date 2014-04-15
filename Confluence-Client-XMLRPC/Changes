@@ -12,6 +12,8 @@
 	  compare complete strings instead (reported by russt [at] releasetools.org)
 	- Many documentation improvements
 	- "local"ize Data::Dumper global configuration variables
+	- Cache serverInfo and return cached value for subsequent calls to 
+	  getServerInfo() method
 
 2.4       2014-04-06 00:49:34 Europe/Berlin
 	- Significantly reworked the documentation
