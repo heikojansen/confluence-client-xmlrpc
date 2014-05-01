@@ -1,5 +1,7 @@
 
 {{$NEXT}}
+
+2.5       2014-05-01 21:38:00 Europe/Berlin
 	- INCOMPATIBLE CHANGE: make updatePage() behave like the API method of 
 	  that name does
 	- New method updateOrStorePage() that behaves like updatePage() did
